@@ -1,51 +1,40 @@
-import React from 'react'
-import { FaChevronLeft, FaChevronRight, FaUser } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { FaChevronLeft, FaChevronRight, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-
-  const navigate = useNavigate()
-
-
-  const canGoBack = window.history.state && window.history.length > 1
+  const navigate = useNavigate();
+  const canGoBack = window.history.state && window.history.length > 1;
 
   return (
-    <div className='flex items-center justify-between mb-6 flex-wrap'>
-
-      {/* BACK / FORWARD BUTTONS */}
-      <div className='flex gap-3'>
-
-        {/* BACK */}
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
           disabled={!canGoBack}
           className={`rounded-full p-3 transition ${
             canGoBack
-              ? 'bg-gray-800 hover:bg-gray-700'
-              : 'bg-gray-900 text-gray-600 cursor-not-allowed'
+              ? "bg-white/10 text-white hover:bg-white/20"
+              : "cursor-not-allowed bg-white/5 text-white/35"
           }`}
         >
           <FaChevronLeft />
         </button>
 
-        {/* FORWARD */}
         <button
           onClick={() => navigate(1)}
-          className='bg-gray-800 rounded-full p-3 hover:bg-gray-700 transition'
+          className="rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
         >
           <FaChevronRight />
         </button>
-
       </div>
 
-      {/* USER */}
-      <button className='flex items-center gap-2 bg-gray-800 hover:bg-gray-700 transition px-4 py-2 rounded-full'>
-        <FaUser />
+      <button className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:scale-[1.02]">
+        <FaUser className="text-xs" />
         <span>Mehul</span>
       </button>
-
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
