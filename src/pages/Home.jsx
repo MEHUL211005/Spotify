@@ -8,6 +8,7 @@ import { setPlaylist } from '../store/playerSlice'
 const Home = () => {
 
   const { currentSong } = useSelector((state) => state.player)
+  const { user, accessToken } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 
   const { data, isLoading, error } = useQuery({
@@ -39,7 +40,7 @@ const Home = () => {
   return (
     <div>
       <h1 className='text-4xl font-bold mb-8'>
-        Good Afternoon
+        Good Afternoon {user?.name}
       </h1>
 
       <MusicSection

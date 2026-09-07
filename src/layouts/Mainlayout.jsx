@@ -7,25 +7,34 @@ import MusicPlayer from "../components/MusicPlayer";
 const Mainlayout = () => {
   return (
     <div className="min-h-screen bg-[#121212] text-white">
-      <div className="flex gap-2 p-2">
+
+      {/* Full Width Navbar */}
+      <header className="sticky top-0 z-10 bg-[#121212]/95 px-6 py-4 backdrop-blur-xl">
+        <Navbar />
+      </header>
+
+      {/* Sidebar + Main Content */}
+      <div className="flex gap-2 px-2">
+
+        {/* Sidebar */}
         <aside className="w-[280px] shrink-0">
           <Sidebar />
         </aside>
 
-        <main className="flex-1 min-w-0 rounded-[28px] bg-[#121212]">
-          <div className="sticky top-0 z-10 rounded-t-[28px] bg-[#121212]/80 px-6 py-4 backdrop-blur-xl">
-            <Navbar />
-          </div>
-
+        {/* Main Screen */}
+        <main className="min-w-0 flex-1 bg-[#121212]">
           <div className="px-6 pb-32">
             <Outlet />
           </div>
         </main>
+
       </div>
 
+      {/* Music Player */}
       <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-[#181818] px-4 py-3 backdrop-blur-xl">
         <MusicPlayer />
       </footer>
+
     </div>
   );
 };

@@ -18,10 +18,10 @@ const menuItems = [
 const Sidebar = () => {
   return (
     <div className="h-[calc(100vh-16px)] rounded-[28px] bg-[#121212] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
-      <div className="mb-8 flex items-center gap-3">
+      {/* <div className="mb-8 flex items-center gap-3">
         <FaSpotify className="text-3xl text-[#1ed760]" />
         <h1 className="text-2xl font-bold tracking-tight">Spotify</h1>
-      </div>
+      </div> */}
 
       <nav className="space-y-1">
         {menuItems.map((item) => {
