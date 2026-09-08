@@ -1,15 +1,41 @@
-import React, { useState } from "react";
-import {
-  FaExternalLinkAlt,
-} from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
 import LogoutModal from "./LogoutModal";
 
 const ProfilePopover = ({ onClose }) => {
   const navigate = useNavigate();
 
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If logout modal is open,
+      // don't close profile popover
+      if (logoutModalOpen) {
+        return;
+      }
+
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setLogoutModalOpen(false);
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, [logoutModalOpen, onClose]);
 
   const handleProfile = () => {
     onClose();
@@ -20,10 +46,16 @@ const ProfilePopover = ({ onClose }) => {
     setLogoutModalOpen(true);
   };
 
+  const handleLogoutModalClose = () => {
+    setLogoutModalOpen(false);
+  };
+
   return (
     <>
-      <div className="absolute right-0 top-full z-50 mt-2 w-[325px] rounded-md bg-[#282828] p-1 text-white shadow-2xl">
-
+      <div
+        ref={profileRef}
+        className="absolute right-0 top-full z-50 mt-2 w-[325px] rounded-md bg-[#282828] p-1 text-white shadow-2xl"
+      >
         {/* Account */}
         <div className="flex items-center justify-between px-3 py-3 text-sm">
           <span>Account</span>
@@ -46,7 +78,7 @@ const ProfilePopover = ({ onClose }) => {
           Recents
         </button>
 
-        {/* Upgrade to Premium */}
+        {/* Premium */}
         <button
           className="flex w-full items-center justify-between px-3 py-3 text-left text-sm hover:bg-[#3e3e3e]"
         >
@@ -92,7 +124,7 @@ const ProfilePopover = ({ onClose }) => {
       {/* Logout Modal */}
       {logoutModalOpen && (
         <LogoutModal
-          onClose={() => setLogoutModalOpen(false)}
+          onClose={handleLogoutModalClose}
         />
       )}
     </>

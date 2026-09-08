@@ -1,64 +1,90 @@
-import React from 'react'
-import { FaPlay } from 'react-icons/fa'
-import { useDispatch } from 'react-redux'
-import { playSong } from '../store/playerSlice'
+import React, { useState } from "react";
+import { FaPlay } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { playSong } from "../store/playerSlice";
+import SignupModal from "./SignupModal";
 
 const AlbumCard = ({ album, currentSong }) => {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const [showSignupModal, setShowSignupModal] = useState(false);
+
+  // Logged-in user
+  const user = useSelector((state) => state.auth.user);
 
   const handlePlay = () => {
-    dispatch(playSong(album))
-  }
+    // Logged out → don't play song
+    if (!user) {
+      setShowSignupModal(true);
+      return;
+    }
 
-  const isActive = currentSong?.id === album.id
+    // Logged in → existing behavior
+    dispatch(playSong(album));
+  };
+
+  const isActive = currentSong?.id === album.id;
 
   return (
-    <div
-      onClick={handlePlay}
-      className={`
-        relative p-4 rounded-lg cursor-pointer transition-all duration-300 group
-        ${isActive
-          ? "bg-green-600/20 ring-2 ring-green-400 scale-105 shadow-lg"
-          : "bg-gray-900 hover:bg-gray-800"
-        }
-      `}
-    >
+    <>
+      <div
+        onClick={handlePlay}
+        className="group relative w-[155px] cursor-pointer"
+      >
+        {/* Image */}
+        <div className="relative h-[155px] w-[155px] overflow-hidden rounded-[6px]">
+          <img
+            src={album.image}
+            alt={album.title}
+            className="h-full w-full object-cover"
+          />
 
-      {/* Image */}
-      <div className='relative'>
-        <img
-          src={album.image}
-          alt={album.title}
-          className='h-52 w-full object-cover rounded-md'
-        />
+          {/* Play Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePlay();
+            }}
+            className={`
+              absolute bottom-2 right-2 flex h-11 w-11 items-center justify-center
+              rounded-full bg-[#1ed760] text-black shadow-lg
+              transition-all duration-200
+              ${
+                isActive
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+              }
+            `}
+          >
+            <FaPlay className="ml-[2px] text-sm" />
+          </button>
+        </div>
 
-        {/* Play Button */}
-        <button
-          className={`
-            absolute bottom-3 right-3 p-4 rounded-full text-black transition-all duration-300
-            ${isActive
-              ? "bg-green-500 opacity-100 translate-y-0"
-              : "bg-green-500 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0"
-            }
-          `}
+        {/* Title */}
+        <h3
+          className={`mt-3 truncate text-[15px] font-medium ${
+            isActive ? "text-[#1ed760]" : "text-white"
+          }`}
         >
-          <FaPlay />
-        </button>
+          {album.title}
+        </h3>
+
+        {/* Artist */}
+        <p className="mt-1 truncate text-[13px] text-[#b3b3b3]">
+          {album.artist}
+        </p>
       </div>
 
-      {/* Title */}
-      <h3 className={`mt-4 text-lg font-bold ${isActive ? "text-green-400" : "text-white"}`}>
-        {album.title}
-      </h3>
+      {/* Signup Modal */}
+      {showSignupModal && (
+        <SignupModal
+          song={album}
+          onClose={() => setShowSignupModal(false)}
+        />
+      )}
+    </>
+  );
+};
 
-      {/* Artist */}
-      <p className='text-gray-400 text-sm mt-1'>
-        {album.artist}
-      </p>
-
-    </div>
-  )
-}
-
-export default AlbumCard
+export default AlbumCard;

@@ -17,7 +17,11 @@ export const loginUser = async (credentials) => {
   return response.data;
 };
 export const logoutUser = async () => {
-  const response = await api.post("/users/logout");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  const response = await api.post("/users/logout", {
+    refreshToken,
+  });
 
   return response.data;
 };

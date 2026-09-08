@@ -1,20 +1,19 @@
-import React, { useEffect, useMemo } from 'react'
-import MusicSection from '../components/MusicSection'
-import { useQuery } from '@tanstack/react-query'
-import { fetchSongs } from '../api/music'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPlaylist } from '../store/playerSlice'
+import React, { useEffect, useMemo } from "react";
+import MusicSection from "../components/MusicSection";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSongs } from "../api/music";
+import { useDispatch, useSelector } from "react-redux";
+import { setPlaylist } from "../store/playerSlice";
 
 const Home = () => {
+  const { currentSong } = useSelector((state) => state.player);
 
-  const { currentSong } = useSelector((state) => state.player)
-  const { user, accessToken } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['songs'],
-    queryFn: fetchSongs
-  })
+    queryKey: ["songs"],
+    queryFn: fetchSongs,
+  });
 
   const songs = useMemo(() => {
     return (
@@ -23,33 +22,34 @@ const Home = () => {
         title: item.trackName,
         image: item.artworkUrl100,
         artist: item.artistName,
-        preview: item.previewUrl
+        preview: item.previewUrl,
       })) || []
-    )
-  }, [data])
+    );
+  }, [data]);
 
   useEffect(() => {
     if (songs.length > 0) {
-      dispatch(setPlaylist(songs))
+      dispatch(setPlaylist(songs));
     }
-  }, [dispatch, songs.length])
+  }, [dispatch, songs]);
 
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p>{error.message}</p>
+  if (isLoading) {
+    return <p className="text-white">Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="text-white">{error.message}</p>;
+  }
 
   return (
     <div>
-      <h1 className='text-4xl font-bold mb-8'>
-        Good Afternoon {user?.name}
-      </h1>
-
       <MusicSection
-        title="Popular Songs"
+        title="Trending songs"
         data={songs}
         currentSong={currentSong}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
