@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setLoginEmail } from "../store/loginSlice";
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

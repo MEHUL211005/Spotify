@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaSpotify, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +8,46 @@ const PersonalDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { name, phone } = useSelector((state) => state.signup);
+  const { name, phone } = useSelector(
+    (state) => state.signup
+  );
+
+  const [errors, setErrors] = useState({
+    name: "",
+    phone: "",
+  });
 
   const handleNext = (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      name: "",
+      phone: "",
+    };
+
+    // Name validation
+    if (!name.trim()) {
+      newErrors.name = "Please enter your name.";
+    } else if (!/^[A-Za-z\s]+$/.test(name.trim())) {
+      newErrors.name =
+        "Name should contain only letters.";
+    }
+
+    // Phone validation
+    if (!phone.trim()) {
+      newErrors.phone =
+        "Please enter your phone number.";
+    } else if (!/^\d{10}$/.test(phone.trim())) {
+      newErrors.phone =
+        "Please enter a valid 10-digit phone number.";
+    }
+
+    setErrors(newErrors);
+
+    // Stop if validation fails
+    if (newErrors.name || newErrors.phone) {
+      return;
+    }
 
     dispatch(
       setPersonalDetails({
@@ -27,16 +63,16 @@ const PersonalDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white flex justify-center">
+    <div className="flex min-h-screen justify-center bg-[#121212] text-white">
       <div className="w-full max-w-[436px] px-4 pt-12">
 
         {/* Spotify Logo */}
-        <div className="flex justify-center mb-10">
+        <div className="mb-10 flex justify-center">
           <FaSpotify className="text-[32px] text-white" />
         </div>
 
         {/* Progress Bar */}
-        <div className="h-[2px] w-full bg-[#727272] mb-5">
+        <div className="mb-5 h-[2px] w-full bg-[#727272]">
           <div className="h-[2px] w-2/3 bg-[#1ed760]"></div>
         </div>
 
@@ -46,8 +82,10 @@ const PersonalDetails = () => {
           {/* Back Arrow */}
           <button
             type="button"
-            onClick={() => navigate("/signup/password")}
-            className="mt-1 text-[#b3b3b3] hover:text-white transition"
+            onClick={() =>
+              navigate("/signup/password")
+            }
+            className="mt-1 text-[#b3b3b3] transition hover:text-white"
             aria-label="Go back"
           >
             <FaArrowLeft className="text-xl" />
@@ -56,76 +94,117 @@ const PersonalDetails = () => {
           <div className="flex-1">
 
             {/* Step */}
-            <p className="text-[15px] text-[#b3b3b3] mb-2">
+            <p className="mb-2 text-[15px] text-[#b3b3b3]">
               Step 2 of 3
             </p>
 
             {/* Title */}
-            <h1 className="text-[16px] font-bold mb-9">
+            <h1 className="mb-9 text-[16px] font-bold">
               Tell us about yourself
             </h1>
 
             {/* Form */}
-            <form onSubmit={handleNext}>
+            <form
+              onSubmit={handleNext}
+              noValidate
+            >
 
               {/* Name */}
               <div className="w-full">
-                <label className="block text-[14px] font-bold mb-1">
+
+                <label className="mb-1 block text-[14px] font-bold">
                   Name
                 </label>
 
-                <p className="text-[14px] text-[#b3b3b3] mb-3">
+                <p className="mb-3 text-[14px] text-[#b3b3b3]">
                   This name will appear on your profile
                 </p>
 
                 <input
                   type="text"
                   value={name}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     dispatch(
                       setPersonalDetails({
                         name: e.target.value,
                         phone,
                       })
-                    )
-                  }
+                    );
+
+                    if (errors.name) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        name: "",
+                      }));
+                    }
+                  }}
                   placeholder="Enter your name"
-                  required
-                  className="w-full h-12 rounded-md border border-[#727272] bg-[#121212] px-3 text-white outline-none placeholder:text-[#727272] focus:border-white transition"
+                  className={`h-12 w-full rounded-md border bg-[#121212] px-3 text-white outline-none placeholder:text-[#727272] transition focus:border-white ${
+                    errors.name
+                      ? "border-red-500"
+                      : "border-[#727272]"
+                  }`}
                 />
+
+                {/* Name Error */}
+                {errors.name && (
+                  <p className="mt-2 text-sm text-red-500">
+                    {errors.name}
+                  </p>
+                )}
+
               </div>
 
               {/* Phone */}
-              <div className="w-full mt-6">
-                <label className="block text-[14px] font-bold mb-1">
+              <div className="mt-6 w-full">
+
+                <label className="mb-1 block text-[14px] font-bold">
                   Phone number
                 </label>
 
-                <p className="text-[14px] text-[#b3b3b3] mb-3">
+                <p className="mb-3 text-[14px] text-[#b3b3b3]">
                   Enter your phone number
                 </p>
 
                 <input
                   type="tel"
                   value={phone}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     dispatch(
                       setPersonalDetails({
                         name,
                         phone: e.target.value,
                       })
-                    )
-                  }
+                    );
+
+                    if (errors.phone) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        phone: "",
+                      }));
+                    }
+                  }}
                   placeholder="Enter your phone number"
-                  required
-                  className="w-full h-12 rounded-md border border-[#727272] bg-[#121212] px-3 text-white outline-none placeholder:text-[#727272] focus:border-white transition"
+                  className={`h-12 w-full rounded-md border bg-[#121212] px-3 text-white outline-none placeholder:text-[#727272] transition focus:border-white ${
+                    errors.phone
+                      ? "border-red-500"
+                      : "border-[#727272]"
+                  }`}
                 />
+
+                {/* Phone Error */}
+                {errors.phone && (
+                  <p className="mt-2 text-sm text-red-500">
+                    {errors.phone}
+                  </p>
+                )}
+
               </div>
 
               {/* Next */}
               <button
                 type="submit"
-                className="mt-16 w-full h-12 rounded-full bg-[#1ed760] text-black font-bold hover:bg-[#1fdf64] hover:scale-[1.02] transition"
+                className="mt-16 h-12 w-full rounded-full bg-[#1ed760] font-bold text-black transition hover:scale-[1.02] hover:bg-[#1fdf64]"
               >
                 Next
               </button>
@@ -135,11 +214,11 @@ const PersonalDetails = () => {
             {/* reCAPTCHA */}
             <div className="mt-9 text-center text-[11px] leading-4 text-[#b3b3b3]">
               This site is protected by reCAPTCHA and the Google{" "}
-              <span className="underline cursor-pointer">
+              <span className="cursor-pointer underline">
                 Privacy Policy
               </span>{" "}
               and{" "}
-              <span className="underline cursor-pointer">
+              <span className="cursor-pointer underline">
                 Terms of Service
               </span>{" "}
               apply.

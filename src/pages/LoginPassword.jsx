@@ -3,7 +3,7 @@ import { FaSpotify, FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
-
+import { Link } from "react-router-dom";
 import { loginUser } from "../api/auth";
 import { setCredentials } from "../store/authSlice";
 
@@ -40,7 +40,7 @@ const LoginPassword = () => {
           user,
           accessToken,
           refreshToken,
-        })
+        }),
       );
 
       // LocalStorage me tokens save
@@ -55,10 +55,7 @@ const LoginPassword = () => {
     },
 
     onError: (error) => {
-      console.error(
-        "Login failed:",
-        error.response?.data || error.message
-      );
+      console.error("Login failed:", error.response?.data || error.message);
     },
   });
 
@@ -75,27 +72,20 @@ const LoginPassword = () => {
   return (
     <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center px-6">
       <div className="w-full max-w-[430px]">
-
         {/* Spotify Logo */}
         <div className="flex justify-center mb-4">
           <FaSpotify className="text-[26px] text-white" />
         </div>
 
         {/* Heading */}
-        <h1 className="text-center text-[32px] font-bold mb-7">
-          Welcome back
-        </h1>
+        <h1 className="text-center text-[32px] font-bold mb-7">Welcome back</h1>
 
         {/* Email */}
         <div className="mb-5">
-          <label className="block text-[12px] font-bold mb-2">
-            Email
-          </label>
+          <label className="block text-[12px] font-bold mb-2">Email</label>
 
           <div className="flex items-center justify-between w-full h-[33px] border border-[#727272] px-2">
-            <span className="text-[12px] text-white truncate">
-              {email}
-            </span>
+            <span className="text-[12px] text-white truncate">{email}</span>
 
             <button
               type="button"
@@ -109,9 +99,7 @@ const LoginPassword = () => {
 
         {/* Password */}
         <form onSubmit={handleSubmit}>
-          <label className="block text-[12px] font-bold mb-2">
-            Password
-          </label>
+          <label className="block text-[12px] font-bold mb-2">Password</label>
 
           <input
             type="password"
@@ -135,7 +123,12 @@ const LoginPassword = () => {
             type="button"
             className="mt-3 text-[12px] text-white underline hover:text-[#1ed760]"
           >
-            Forgot password?
+            <Link
+              to="/forgot-password"
+              className="text-sm font-bold text-white underline hover:text-[#1ed760]"
+            >
+              Forgot password?
+            </Link>
           </button>
 
           {/* Login */}
@@ -174,7 +167,6 @@ const LoginPassword = () => {
             Sign up
           </button>
         </div>
-
       </div>
     </div>
   );

@@ -55,12 +55,12 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Podcast Prompt */}
-        <div className="mt-6 rounded-lg bg-[#242424] px-5 py-4">
+      
+        {/* <div className="mt-6 rounded-lg bg-[#242424] px-5 py-4">
           <h3 className="text-[14px] font-bold text-white">
             Let's find some podcasts to follow
           </h3>
-        </div>
+        </div> */}
 
         {/* Footer */}
         <div className="mt-7 px-3">

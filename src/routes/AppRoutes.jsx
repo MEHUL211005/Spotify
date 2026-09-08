@@ -10,6 +10,8 @@ import Terms from "../pages/Terms";
 import VerifyOTP from "../pages/VerifyOTP";
 import Login from "../pages/Login";
 import LoginPassword from "../pages/LoginPassword";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 import Mainlayout from '../layouts/Mainlayout'
 
 const AppRoutes = () => {
@@ -27,6 +29,8 @@ const AppRoutes = () => {
         <Route path="/signup/verify-otp" element={<VerifyOTP />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login/password" element={<LoginPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
     </Routes>
   );
 }

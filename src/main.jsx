@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
+import { Toaster } from "react-hot-toast";
 import { setCredentials } from './store/authSlice.js'
 
 const queryClient = new QueryClient()
@@ -33,6 +34,8 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
+
+      <Toaster position="top-right" reverseOrder={false} />
     </QueryClientProvider>
   </Provider>
 )

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../api/auth";
+import toast from "react-hot-toast";
 
 const Terms = () => {
   const [marketing, setMarketing] = useState(false);
@@ -17,19 +18,28 @@ const Terms = () => {
   );
 
   // TanStack Query mutation
-  const registerMutation = useMutation({
-    mutationFn: registerUser,
+ const registerMutation = useMutation({
+  mutationFn: registerUser,
 
-    onSuccess: (data) => {
-  console.log("Registration successful:", data);
+  onSuccess: (data) => {
+    console.log("Registration successful:", data);
 
-  navigate("/signup/verify-otp");
-},
+    toast.success(
+      data?.message || "User registered successfully!"
+    );
 
-    onError: (error) => {
-      console.error("Registration failed:", error);
-    },
-  });
+    navigate("/signup/verify-otp");
+  },
+
+  onError: (error) => {
+    console.error("Registration failed:", error);
+
+    toast.error(
+      error.response?.data?.message ||
+        "Registration failed. Please try again."
+    );
+  },
+});
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -163,14 +173,6 @@ const Terms = () => {
               >
                 {registerMutation.isPending ? "Signing up..." : "Sign up"}
               </button>
-
-              {/* Error */}
-              {registerMutation.isError && (
-                <p className="mt-4 text-center text-sm text-red-400">
-                  {registerMutation.error?.message ||
-                    "Registration failed"}
-                </p>
-              )}
 
             </form>
 
