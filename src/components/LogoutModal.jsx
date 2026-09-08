@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -13,7 +13,20 @@ const LogoutModal = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
   const handleLogout = async () => {
     if (loading) return;
 
@@ -21,18 +34,14 @@ const LogoutModal = ({ onClose }) => {
 
     console.log("===== LOGOUT START =====");
 
-    const refreshToken =
-      localStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
     console.log("Refresh Token:", refreshToken);
 
     try {
       const response = await logoutUser();
 
-      console.log(
-        "LOGOUT API RESPONSE:",
-        response
-      );
+      console.log("LOGOUT API RESPONSE:", response);
 
       dispatch(clearCredentials());
 
@@ -40,20 +49,11 @@ const LogoutModal = ({ onClose }) => {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
 
-      console.log(
-        "Access Token:",
-        localStorage.getItem("accessToken")
-      );
+      console.log("Access Token:", localStorage.getItem("accessToken"));
 
-      console.log(
-        "Refresh Token:",
-        localStorage.getItem("refreshToken")
-      );
+      console.log("Refresh Token:", localStorage.getItem("refreshToken"));
 
-      console.log(
-        "User:",
-        localStorage.getItem("user")
-      );
+      console.log("User:", localStorage.getItem("user"));
 
       onClose();
 
@@ -65,15 +65,9 @@ const LogoutModal = ({ onClose }) => {
 
       console.error("Error:", error);
 
-      console.error(
-        "Response:",
-        error.response?.data
-      );
+      console.error("Response:", error.response?.data);
 
-      console.error(
-        "Status:",
-        error.response?.status
-      );
+      console.error("Status:", error.response?.status);
     } finally {
       setLoading(false);
     }
@@ -81,14 +75,13 @@ const LogoutModal = ({ onClose }) => {
 
   return createPortal(
     <div className="logout-modal fixed inset-0 z-[999999] flex items-center justify-center bg-black/60">
-
       {/* Modal */}
-      <div className="w-[380px] rounded-lg bg-[#282828] p-6 text-white shadow-2xl">
-
+      <div
+        ref={modalRef}
+        className="w-[380px] rounded-lg bg-[#282828] p-6 text-white shadow-2xl"
+      >
         {/* Title */}
-        <h2 className="text-xl font-bold">
-          Log out
-        </h2>
+        <h2 className="text-xl font-bold">Log out</h2>
 
         {/* Message */}
         <p className="mt-3 text-sm text-[#b3b3b3]">
@@ -97,7 +90,6 @@ const LogoutModal = ({ onClose }) => {
 
         {/* Buttons */}
         <div className="mt-7 flex justify-end gap-3">
-
           {/* Cancel */}
           <button
             type="button"
@@ -112,24 +104,19 @@ const LogoutModal = ({ onClose }) => {
           <button
             type="button"
             onClick={() => {
-              console.log(
-                "LOGOUT BUTTON CLICKED"
-              );
+              console.log("LOGOUT BUTTON CLICKED");
 
               handleLogout();
             }}
             disabled={loading}
             className="rounded-full bg-white px-5 py-2.5 text-sm font-bold text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading
-              ? "Logging out..."
-              : "Log out"}
+            {loading ? "Logging out..." : "Log out"}
           </button>
-
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 
