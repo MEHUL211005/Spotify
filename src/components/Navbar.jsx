@@ -168,7 +168,7 @@ const Navbar = () => {
         {user && (
           <div
             ref={profileRef}
-            className="relative"
+            className="relative z-[10000]"
           >
             {/* Profile Button */}
 

@@ -54,7 +54,7 @@ const ProfilePopover = ({ onClose }) => {
     <>
       <div
         ref={profileRef}
-        className="absolute right-0 top-full z-50 mt-2 w-[325px] rounded-md bg-[#282828] p-1 text-white shadow-2xl"
+        className="absolute right-0 top-full z-[9999] mt-2 w-[325px] rounded-md bg-[#282828] p-1 text-white shadow-2xl"
       >
         {/* Account */}
         <div className="flex items-center justify-between px-3 py-3 text-sm">

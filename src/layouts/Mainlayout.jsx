@@ -9,7 +9,7 @@ const Mainlayout = () => {
     <div className="min-h-screen bg-black text-white">
 
       {/* Full Width Navbar */}
-     <header className="sticky top-0 z-10 bg-black px-4 py-2">
+    <header className="sticky top-0 z-[9999] bg-black px-4 py-2">
   <Navbar />
 </header>
 
