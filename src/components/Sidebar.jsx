@@ -25,7 +25,7 @@ const Sidebar = () => {
   // --------------------------------
   if (!user) {
     return (
-      <div className="flex h-[calc(100vh-16px)] flex-col rounded-[8px] bg-[#121212] p-2">
+      <div className="flex h-full min-h-0 flex-col overflow-y-auto rounded-[8px] bg-[#121212] p-2">
         {/* Your Library Header */}
         <div className="flex items-center justify-between px-3 py-3">
           <h2 className="text-[14px] font-bold text-white">
@@ -55,8 +55,15 @@ const Sidebar = () => {
           </button>
         </div>
 
+        {/* Podcast Prompt */}
+        <div className="mt-6 rounded-lg bg-[#242424] px-5 py-4">
+          <h3 className="text-[14px] font-bold text-white">
+            Let's find some podcasts to follow
+          </h3>
+        </div>
+
         {/* Footer */}
-        <div className="mt-12 px-3">
+        <div className="mt-7 px-3">
           <div className="flex flex-wrap gap-x-4 gap-y-3 text-[11px] text-[#b3b3b3]">
             <button className="hover:text-white">
               Legal
@@ -101,7 +108,7 @@ const Sidebar = () => {
   // LOGGED IN SIDEBAR
   // --------------------------------
   return (
-    <div className="h-[calc(100vh-16px)] rounded-[8px] bg-[#121212] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+    <div className="h-full min-h-0 overflow-y-auto rounded-[8px] bg-[#121212] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
       {/* Navigation */}
       <nav className="space-y-1">
         {menuItems.map((item) => {

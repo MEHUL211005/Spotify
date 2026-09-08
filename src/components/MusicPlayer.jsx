@@ -154,7 +154,7 @@ const MusicPlayer = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-gradient-to-r from-[#af2896] to-[#509bf5] px-6 py-3 text-white">
+      <div className="w-full bg-gradient-to-r from-[#af2896] to-[#509bf5] px-6 py-3 text-white">
         <div className="flex items-center justify-between">
           {/* Text */}
           <div>
