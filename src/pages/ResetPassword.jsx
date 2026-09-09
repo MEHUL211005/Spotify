@@ -1,13 +1,25 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { resetPassword } from "../api/auth";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(
+    () =>
+      location.state?.email ||
+      localStorage.getItem("resetPasswordEmail") ||
+      "",
+  );
+
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -19,8 +31,19 @@ const ResetPassword = () => {
     setMessage("");
     setError("");
 
-    if (!email.trim() || !token.trim() || !newPassword.trim()) {
+    if (
+      !email.trim() ||
+      !token.trim() ||
+      !newPassword.trim() ||
+      !confirmPassword.trim()
+    ) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    // Confirm password validation
+    if (newPassword !== confirmPassword) {
+      setError("Password is not same.");
       return;
     }
 
@@ -41,7 +64,7 @@ const ResetPassword = () => {
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -49,31 +72,29 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black px-4 text-white">
+    <div className="flex min-h-screen items-center justify-center bg-black px-4 py-6 text-white sm:px-6">
       <div className="w-full max-w-[450px]">
-
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold">
-            Spotify
-          </h1>
+        {/* Logo */}
+        <div className="mb-7 text-center sm:mb-10">
+          <h1 className="text-3xl font-bold">Spotify</h1>
         </div>
 
-        <div className="rounded-lg bg-[#121212] px-8 py-10">
-
-          <h2 className="text-2xl font-bold">
+        {/* Card */}
+        <div className="rounded-lg bg-[#121212] px-5 py-8 sm:px-8 sm:py-10">
+          {/* Heading */}
+          <h2 className="text-xl font-bold sm:text-2xl">
             Reset your password
           </h2>
 
-          <p className="mt-3 text-sm leading-6 text-[#b3b3b3]">
-            Enter the reset token you received in your
-            email and choose a new password.
+          {/* Description */}
+          <p className="mt-3 text-sm leading-5 text-[#b3b3b3] sm:leading-6">
+            Enter the OTP you received in your email and choose a new password.
           </p>
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-5"
+            className="mt-6 space-y-5 sm:mt-8"
           >
-
             {/* Email */}
             <div>
               <label className="mb-2 block text-sm font-bold">
@@ -85,22 +106,24 @@ const ResetPassword = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
-                className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white"
+                disabled={loading}
+                className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
-            {/* Token */}
+            {/* OTP */}
             <div>
               <label className="mb-2 block text-sm font-bold">
-                Reset token
+                OTP
               </label>
 
               <input
                 type="text"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                placeholder="Enter reset token"
-                className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white"
+                placeholder="Enter OTP"
+                disabled={loading}
+                className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -110,42 +133,102 @@ const ResetPassword = () => {
                 New password
               </label>
 
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) =>
-                  setNewPassword(e.target.value)
-                }
-                placeholder="New password"
-                className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white"
-              />
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="New password"
+                  disabled={loading}
+                  className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 pr-10 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white disabled:cursor-not-allowed disabled:opacity-50"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowNewPassword((prev) => !prev)
+                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#b3b3b3] transition hover:text-white"
+                  aria-label={
+                    showNewPassword
+                      ? "Hide new password"
+                      : "Show new password"
+                  }
+                >
+                  {showNewPassword ? (
+                    <FaEyeSlash size={16} />
+                  ) : (
+                    <FaEye size={16} />
+                  )}
+                </button>
+              </div>
             </div>
 
+            {/* Confirm Password */}
+            <div>
+              <label className="mb-2 block text-sm font-bold">
+                Confirm password
+              </label>
+
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) =>
+                    setConfirmPassword(e.target.value)
+                  }
+                  placeholder="Confirm password"
+                  disabled={loading}
+                  className="w-full rounded-md border border-[#727272] bg-[#121212] px-4 py-3 pr-10 text-sm text-white outline-none placeholder:text-[#a7a7a7] focus:border-white disabled:cursor-not-allowed disabled:opacity-50"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowConfirmPassword((prev) => !prev)
+                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#b3b3b3] transition hover:text-white"
+                  aria-label={
+                    showConfirmPassword
+                      ? "Hide confirm password"
+                      : "Show confirm password"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash size={16} />
+                  ) : (
+                    <FaEye size={16} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Error */}
             {error && (
               <p className="text-sm text-red-500">
                 {error}
               </p>
             )}
 
+            {/* Success */}
             {message && (
               <p className="text-sm text-[#1ed760]">
                 {message}
               </p>
             )}
 
+            {/* Reset Button */}
             <button
               type="submit"
               disabled={loading}
               className="w-full rounded-full bg-[#1ed760] py-3 text-sm font-bold text-black transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading
-                ? "Resetting..."
-                : "Reset password"}
+              {loading ? "Resetting..." : "Reset password"}
             </button>
-
           </form>
 
-          <div className="mt-8 border-t border-[#2a2a2a] pt-6 text-center">
+          {/* Back to Login */}
+          <div className="mt-6 border-t border-[#2a2a2a] pt-5 text-center sm:mt-8 sm:pt-6">
             <Link
               to="/login"
               className="text-sm font-bold text-white underline hover:text-[#1ed760]"
@@ -153,7 +236,6 @@ const ResetPassword = () => {
               ← Back to login
             </Link>
           </div>
-
         </div>
       </div>
     </div>

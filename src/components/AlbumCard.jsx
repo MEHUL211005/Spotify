@@ -26,11 +26,12 @@ const AlbumCard = ({ album, currentSong }) => {
     <>
       <div
         onClick={handlePlay}
-        className={`
-          group relative w-[155px] cursor-pointer
-          transition-transform duration-200 ease-out
-          hover:-translate-y-1
-        `}
+       className={`
+  group relative w-[140px] cursor-pointer
+  sm:w-[155px]
+  transition-transform duration-200 ease-out
+  hover:-translate-y-1
+`}
       >
         {/* Card Background */}
         <div
@@ -43,8 +44,7 @@ const AlbumCard = ({ album, currentSong }) => {
         {/* Card Content */}
         <div className="relative">
           {/* Image */}
-          <div className="relative h-[155px] w-[155px] overflow-hidden rounded-[6px]">
-            <img
+<div className="relative h-[140px] w-[140px] overflow-hidden rounded-[6px] sm:h-[155px] sm:w-[155px]">            <img
               src={album.image}
               alt={album.title}
               className="
@@ -61,18 +61,19 @@ const AlbumCard = ({ album, currentSong }) => {
                 e.stopPropagation();
                 handlePlay();
               }}
-              className={`
-                absolute bottom-2 right-2
-                flex h-11 w-11 items-center justify-center
-                rounded-full bg-[#1ed760] text-black shadow-lg
-                transition-all duration-200
-                ${
-                  isActive
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-                }
-                hover:scale-105
-              `}
+            className={`
+  absolute bottom-2 right-2
+  flex h-9 w-9 items-center justify-center
+  rounded-full bg-[#1ed760] text-black shadow-lg
+  transition-all duration-200
+  sm:h-11 sm:w-11
+  ${
+    isActive
+      ? "translate-y-0 opacity-100"
+      : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+  }
+  hover:scale-105
+`}
             >
               <FaPlay className="ml-[2px] text-sm" />
             </button>
@@ -81,15 +82,15 @@ const AlbumCard = ({ album, currentSong }) => {
           {/* Title */}
           <h3
             className={`
-              mt-3 truncate text-[15px] font-medium
-              ${isActive ? "text-[#1ed760]" : "text-white"}
+mt-2 truncate text-[14px] font-medium sm:mt-3 sm:text-[15px]         
+     ${isActive ? "text-[#1ed760]" : "text-white"}
             `}
           >
             {album.title}
           </h3>
 
           {/* Artist */}
-          <p className="mt-1 truncate text-[13px] text-[#b3b3b3]">
+          <p className="mt-1 truncate text-[12px] text-[#b3b3b3] sm:text-[13px]">
             {album.artist}
           </p>
         </div>

@@ -28,9 +28,7 @@ const Sidebar = () => {
       <div className="flex h-full min-h-0 flex-col overflow-y-auto rounded-[8px] bg-[#121212] p-2">
         {/* Your Library Header */}
         <div className="flex items-center justify-between px-3 py-3">
-          <h2 className="text-[14px] font-bold text-white">
-            Your Library
-          </h2>
+          <h2 className="text-[14px] font-bold text-white">Your Library</h2>
 
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-[#242424] text-[#b3b3b3] transition hover:scale-105 hover:text-white"
@@ -50,12 +48,11 @@ const Sidebar = () => {
             It's easy, we'll help you
           </p>
 
-          <button className="mt-5 rounded-full bg-white px-4 py-2 text-[13px] font-bold text-black transition hover:scale-105">
+          <button className="mt-5 rounded-full bg-white px-1.5 py-1 text-[2px] font-bold text-black transition hover:scale-105">
             Create playlist
           </button>
         </div>
 
-      
         {/* <div className="mt-6 rounded-lg bg-[#242424] px-5 py-4">
           <h3 className="text-[14px] font-bold text-white">
             Let's find some podcasts to follow
@@ -65,38 +62,26 @@ const Sidebar = () => {
         {/* Footer */}
         <div className="mt-7 px-3">
           <div className="flex flex-wrap gap-x-4 gap-y-3 text-[11px] text-[#b3b3b3]">
-            <button className="hover:text-white">
-              Legal
-            </button>
+            <button className="hover:text-white">Legal</button>
 
             <button className="hover:text-white">
               Safety & Privacy Center
             </button>
 
-            <button className="hover:text-white">
-              Privacy Policy
-            </button>
+            <button className="hover:text-white">Privacy Policy</button>
 
-            <button className="hover:text-white">
-              Cookies
-            </button>
+            <button className="hover:text-white">Cookies</button>
 
-            <button className="hover:text-white">
-              About Ads
-            </button>
+            <button className="hover:text-white">About Ads</button>
 
-            <button className="hover:text-white">
-              Accessibility
-            </button>
+            <button className="hover:text-white">Accessibility</button>
 
-            <button className="hover:text-white">
-              Cookies
-            </button>
+            <button className="hover:text-white">Cookies</button>
           </div>
 
           {/* Language */}
-          <button className="mt-8 flex items-center gap-2 rounded-full border border-[#727272] px-4 py-2 text-[13px] font-bold text-white transition hover:border-white">
-            <FaGlobe className="text-sm" />
+          <button className="mt-8 flex items-center gap-1.5 rounded-full border border-[#727272] px-3 py-1.5 text-[11px] font-bold text-white transition hover:border-white">
+            <FaGlobe className="text-xs" />
             English
           </button>
         </div>
@@ -137,9 +122,7 @@ const Sidebar = () => {
       {/* Playlists */}
       <div className="mt-8 rounded-2xl bg-white/5 p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white">
-            Your playlists
-          </h2>
+          <h2 className="text-sm font-semibold text-white">Your playlists</h2>
 
           <button className="rounded-full bg-white/10 p-2 text-white/80 hover:bg-white/15">
             <FaPlus className="text-xs" />

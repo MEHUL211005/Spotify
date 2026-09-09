@@ -3,7 +3,7 @@ import { FaChevronLeft } from "react-icons/fa";
 
 const RightSearchPanel = ({ onClose }) => {
   return (
-    <aside className="relative flex min-h-0 w-[380px] shrink-0 flex-col overflow-hidden rounded-lg bg-[#121212]">
+    <aside className="relative flex h-full min-h-0 w-[380px] shrink-0 flex-col overflow-hidden rounded-lg bg-[#121212]">
       <button
         type="button"
         onClick={onClose}
@@ -20,7 +20,7 @@ const RightSearchPanel = ({ onClose }) => {
 
         <button
           type="button"
-          className="rounded-full bg-[#1ed760] px-5 py-2 text-sm font-bold text-black transition hover:scale-105"
+          className="rounded-full bg-[#1ed760] px-6 py-3 text-base font-bold text-black transition hover:scale-[1.02]"
         >
           Search
         </button>

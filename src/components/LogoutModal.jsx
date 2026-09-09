@@ -7,13 +7,12 @@ import { logoutUser } from "../api/auth";
 import { clearCredentials } from "../store/authSlice";
 
 const LogoutModal = ({ onClose }) => {
-  console.log("LogoutModal rendered");
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -27,21 +26,14 @@ const LogoutModal = ({ onClose }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
   const handleLogout = async () => {
     if (loading) return;
 
     setLoading(true);
 
-    console.log("===== LOGOUT START =====");
-
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    console.log("Refresh Token:", refreshToken);
-
     try {
-      const response = await logoutUser();
-
-      console.log("LOGOUT API RESPONSE:", response);
+      await logoutUser();
 
       dispatch(clearCredentials());
 
@@ -49,24 +41,11 @@ const LogoutModal = ({ onClose }) => {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
 
-      console.log("Access Token:", localStorage.getItem("accessToken"));
-
-      console.log("Refresh Token:", localStorage.getItem("refreshToken"));
-
-      console.log("User:", localStorage.getItem("user"));
-
       onClose();
-
       navigate("/");
-
-      console.log("===== LOGOUT COMPLETE =====");
     } catch (error) {
-      console.error("===== LOGOUT ERROR =====");
-
-      console.error("Error:", error);
-
+      console.error("Logout Error:", error);
       console.error("Response:", error.response?.data);
-
       console.error("Status:", error.response?.status);
     } finally {
       setLoading(false);
@@ -74,14 +53,16 @@ const LogoutModal = ({ onClose }) => {
   };
 
   return createPortal(
-    <div className="logout-modal fixed inset-0 z-[999999] flex items-center justify-center bg-black/60">
+    <div className="logout-modal fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 px-4">
       {/* Modal */}
       <div
         ref={modalRef}
-        className="w-[380px] rounded-lg bg-[#282828] p-6 text-white shadow-2xl"
+        className="w-[calc(100vw-32px)] max-w-[380px] rounded-lg bg-[#282828] p-5 text-white shadow-2xl sm:p-6"
       >
         {/* Title */}
-        <h2 className="text-xl font-bold">Log out</h2>
+        <h2 className="text-lg font-bold sm:text-xl">
+          Log out
+        </h2>
 
         {/* Message */}
         <p className="mt-3 text-sm text-[#b3b3b3]">
@@ -89,13 +70,13 @@ const LogoutModal = ({ onClose }) => {
         </p>
 
         {/* Buttons */}
-        <div className="mt-7 flex justify-end gap-3">
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:mt-7 sm:flex-row sm:justify-end sm:gap-3">
           {/* Cancel */}
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-full px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#3e3e3e] disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#3e3e3e] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
             Cancel
           </button>
@@ -103,13 +84,9 @@ const LogoutModal = ({ onClose }) => {
           {/* Log out */}
           <button
             type="button"
-            onClick={() => {
-              console.log("LOGOUT BUTTON CLICKED");
-
-              handleLogout();
-            }}
+            onClick={handleLogout}
             disabled={loading}
-            className="rounded-full bg-white px-5 py-2.5 text-sm font-bold text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-white px-5 py-2.5 text-sm font-bold text-black transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
             {loading ? "Logging out..." : "Log out"}
           </button>

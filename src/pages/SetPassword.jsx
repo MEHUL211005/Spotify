@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   FaSpotify,
   FaArrowLeft,
+  FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -133,7 +134,11 @@ const SetPassword = () => {
                       : "Show password"
                   }
                 >
-                  <FaEyeSlash className="text-xl" />
+                  {showPassword ? (
+                    <FaEyeSlash className="text-xl" />
+                  ) : (
+                    <FaEye className="text-xl" />
+                  )}
                 </button>
 
               </div>

@@ -27,6 +27,7 @@ const ForgotPassword = () => {
       const response = await forgotPassword(email);
 
       setMessage(response.message);
+      localStorage.setItem("resetPasswordEmail", email);
     } catch (error) {
       setError(
         error.response?.data?.message ||
@@ -37,9 +38,18 @@ const ForgotPassword = () => {
     }
   };
 
+  const handleContinueReset = () => {
+    if (!email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    localStorage.setItem("resetPasswordEmail", email);
+    navigate("/reset-password", { state: { email } });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black px-4 text-white">
-      <div className="w-full max-w-[450px]">
+<div className="flex min-h-screen items-center justify-center bg-black px-4 py-6 text-white">      <div className="w-full max-w-[450px]">
 
         {/* Logo */}
         <div className="mb-10 text-center">
@@ -49,17 +59,16 @@ const ForgotPassword = () => {
         </div>
 
         {/* Card */}
-        <div className="rounded-lg bg-[#121212] px-8 py-10">
-
+<div className="rounded-lg bg-[#121212] px-5 py-8 sm:px-8 sm:py-10">
           {/* Heading */}
-          <h2 className="text-2xl font-bold">
-            Reset your password
+<h2 className="text-xl font-bold sm:text-2xl">           
+   Reset your password
           </h2>
 
           {/* Description */}
-          <p className="mt-3 text-sm leading-6 text-[#b3b3b3]">
-            Enter the email address you used to register.
-            We'll send you a password reset token.
+<p className="mt-3 text-sm leading-6 text-[#b3b3b3]">    
+          Enter the email address you used to register.
+           We'll send you a password reset OTP.
           </p>
 
           {/* Form */}
@@ -101,14 +110,14 @@ const ForgotPassword = () => {
               disabled={loading}
               className="mt-6 w-full rounded-full bg-[#1ed760] py-3 text-sm font-bold text-black transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Sending..." : "Send reset token"}
+              {loading ? "Sending..." : "Send OTP"}
             </button>
 
             {/* Continue Button */}
             {message && (
               <button
                 type="button"
-                onClick={() => navigate("/reset-password")}
+                onClick={handleContinueReset}
                 className="mt-4 w-full rounded-full border border-white py-3 text-sm font-bold text-white transition hover:bg-white hover:text-black"
               >
                 Continue to reset password

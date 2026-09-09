@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   FaSpotify,
   FaMobileAlt,
@@ -7,8 +8,10 @@ import {
   FaFacebook,
   FaApple,
 } from "react-icons/fa";
+
 import { useDispatch } from "react-redux";
 import { setLoginEmail } from "../store/loginSlice";
+
 import toast from "react-hot-toast";
 
 const Login = () => {
@@ -49,47 +52,49 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center px-6">
-      <div className="w-full max-w-[430px]">
+    <div className="flex min-h-screen items-center justify-center bg-[#121212] px-4 py-6 text-white sm:px-6">
+      <div className="w-full max-w-[330px] py-3 sm:max-w-[360px]">
 
-        {/* Spotify Logo */}
-        <div className="flex justify-center mb-4">
-          <FaSpotify className="text-[26px] text-white" />
+        {/* Logo */}
+        <div className="mb-6 flex justify-center">
+          <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white">
+            <FaSpotify className="text-[26px] text-[#121212]" />
+          </div>
         </div>
 
         {/* Heading */}
-        <h1 className="text-center text-[32px] font-bold mb-7">
+        <h1 className="mb-6 text-center text-[32px] font-black leading-[0.94] tracking-[-0.08em] text-white sm:text-[38px]">
           Welcome back
         </h1>
 
         {/* Email Form */}
         <form onSubmit={handleContinue}>
-
-          <label className="block text-[12px] font-bold mb-2">
+          {/* Email Label */}
+          <label className="mb-2 block text-[12px] font-bold text-white">
             Email
           </label>
 
+          {/* Email Input */}
           <input
             type="email"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
 
-              // Remove error while user starts correcting
               if (emailError) {
                 setEmailError("");
               }
             }}
-            className={`w-full h-[33px] bg-transparent px-2 text-sm outline-none border ${
+            className={`h-[40px] w-full rounded-[4px] border bg-transparent px-3 text-[13px] text-white outline-none ${
               emailError
                 ? "border-red-500"
-                : "border-[#727272] focus:border-white"
+                : "border-[#585858] focus:border-white"
             }`}
           />
 
-          {/* Inline Error */}
+          {/* Email Error */}
           {emailError && (
-            <p className="text-red-500 text-[11px] mt-1">
+            <p className="mt-1 text-[11px] text-red-500">
               {emailError}
             </p>
           )}
@@ -97,79 +102,127 @@ const Login = () => {
           {/* Continue */}
           <button
             type="submit"
-            className="w-full h-[33px] mt-[10px] rounded-full bg-[#1ed760] text-black text-[12px] font-bold hover:bg-[#1fdf64] transition"
+            className="mt-4 h-[42px] w-full rounded-full bg-[#1ed760] text-[14px] font-bold text-black transition hover:bg-[#1fdf64]"
           >
             Continue
           </button>
-
         </form>
 
-        {/* OR */}
-        <div className="flex justify-center my-[12px]">
-          <span className="text-[12px] text-white">
+        {/* Divider */}
+        <div className="my-5 flex items-center gap-4">
+          <div className="h-px flex-1 bg-[#2a2a2a]" />
+
+          <span className="text-[12px] font-medium text-[#d9d9d9]">
             or
           </span>
+
+          <div className="h-px flex-1 bg-[#2a2a2a]" />
         </div>
 
-        {/* Phone */}
+        {/* Phone Login */}
         <button
           type="button"
           onClick={() => toast("Phone login coming soon")}
-          className="w-full h-[33px] rounded-full border border-[#727272] flex items-center justify-center gap-3 text-[11px] font-bold hover:border-white transition"
+          className="relative flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
-          <FaMobileAlt className="text-[14px]" />
-          Continue with phone number
+          <span className="absolute left-4 top-1/2 -translate-y-1/2">
+            <FaMobileAlt className="text-[14px]" />
+          </span>
+
+          <span className="block px-8 text-center text-[12px] sm:px-0 sm:text-[13px]">
+            Continue with phone number
+          </span>
         </button>
 
-        {/* Google */}
+        {/* Google Login */}
         <button
           type="button"
           onClick={() => toast("Google login coming soon")}
-          className="w-full h-[33px] mt-[6px] rounded-full border border-[#727272] flex items-center justify-center gap-3 text-[11px] font-bold hover:border-white transition"
+          className="relative mt-2 flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
-          <FaGoogle className="text-[14px]" />
-          Continue with Google
+          <span className="absolute left-4 top-1/2 -translate-y-1/2">
+            <FaGoogle className="text-[14px] text-[#4285F4]" />
+          </span>
+
+          <span className="block text-center">
+            Continue with Google
+          </span>
         </button>
 
-        {/* Facebook */}
+        {/* Facebook Login */}
         <button
           type="button"
           onClick={() => toast("Facebook login coming soon")}
-          className="w-full h-[33px] mt-[6px] rounded-full border border-[#727272] flex items-center justify-center gap-3 text-[11px] font-bold hover:border-white transition"
+          className="relative mt-2 flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
-          <FaFacebook className="text-[14px]" />
-          Continue with Facebook
+          <span className="absolute left-4 top-1/2 -translate-y-1/2">
+            <FaFacebook className="text-[14px] text-[#1877F2]" />
+          </span>
+
+          <span className="block text-center">
+            Continue with Facebook
+          </span>
         </button>
 
-        {/* Apple */}
+        {/* Apple Login */}
         <button
           type="button"
           onClick={() => toast("Apple login coming soon")}
-          className="w-full h-[33px] mt-[6px] rounded-full border border-[#727272] flex items-center justify-center gap-3 text-[11px] font-bold hover:border-white transition"
+          className="relative mt-2 flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
-          <FaApple className="text-[14px]" />
-          Continue with Apple
+          <span className="absolute left-4 top-1/2 -translate-y-1/2">
+            <FaApple className="text-[14px] text-white" />
+          </span>
+
+          <span className="block text-center">
+            Continue with Apple
+          </span>
         </button>
 
-        {/* Signup */}
-        <div className="text-center mt-11">
-          <p className="text-[11px] text-[#b3b3b3] mb-3">
+        {/* Sign Up */}
+        <div className="mt-5 text-center">
+          <p className="mb-2 text-[12px] text-[#b3b3b3]">
             Don't have an account?
           </p>
 
           <button
             type="button"
             onClick={() => navigate("/signup")}
-            className="text-white text-[12px] font-bold hover:underline"
+            className="text-[13px] font-bold text-white underline decoration-white/60 underline-offset-4 hover:text-white"
           >
             Sign up
           </button>
         </div>
 
+        {/* reCAPTCHA */}
+        <div className="mt-8 px-2 text-center text-[10px] leading-[1.5] text-[#b3b3b3] sm:px-0 sm:text-[11px]">
+          This site is protected by reCAPTCHA and the Google
+
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noreferrer"
+            className="ml-1 text-white underline decoration-white/60 underline-offset-2"
+          >
+            Privacy Policy
+          </a>
+
+          and
+
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noreferrer"
+            className="ml-1 text-white underline decoration-white/60 underline-offset-2"
+          >
+            Terms of Service
+          </a>
+
+          apply.
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
-
