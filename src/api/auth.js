@@ -43,5 +43,17 @@ export const resetPassword = async ({
     newPassword,
   });
 
+
+  return response.data;
+};
+export const socialLogin = async ({
+  firebaseIdToken,
+  name,
+}) => {
+  const response = await api.post("/users/social-login", {
+    firebaseIdToken,
+    name,
+  });
+
   return response.data;
 };

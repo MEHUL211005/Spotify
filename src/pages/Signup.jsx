@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-
+import { GoogleAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { firebaseAuth } from "../firebase/firebase";
+import { socialLogin } from "../api/auth";
+import { setCredentials } from "../store/authSlice";
 import {
   FaSpotify,
   FaMobileAlt,
@@ -12,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setEmail } from "../store/signupSlice";
+import { toast } from "react-hot-toast";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -43,7 +48,63 @@ const Signup = () => {
 
     navigate("/signup/password");
   };
+const handleGoogleSignup = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
 
+    const result = await signInWithPopup(
+      firebaseAuth,
+      provider
+    );
+
+    const firebaseUser = result.user;
+
+    const firebaseIdToken =
+      await firebaseUser.getIdToken();
+
+    const response = await socialLogin({
+  firebaseIdToken,
+});
+
+    const { user, accessToken, refreshToken } =
+      response.data;
+
+    dispatch(
+      setCredentials({
+        user,
+        accessToken,
+        refreshToken,
+      })
+    );
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem(
+      "user",
+      JSON.stringify(user)
+    );
+
+    console.log("Google Signup successful:", user);
+
+    navigate("/");
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      return;
+    }
+
+    if (error.code === "auth/cancelled-popup-request") {
+      return;
+    }
+
+    console.error("Google Signup Error:", error);
+
+    toast.error(
+      error.response?.data?.message ||
+        error.message ||
+        "Google signup failed"
+    );
+  }
+};
   return (
     <div className="flex min-h-screen justify-center bg-[#121212] px-4 py-6 text-white sm:px-6">
       <div className="w-full max-w-[436px] py-4 sm:py-8">
@@ -117,6 +178,7 @@ const Signup = () => {
         {/* Phone */}
         <button
           type="button"
+          onClick={() => navigate("/signup/phone")}
           className="relative mx-auto flex h-12 w-full max-w-[324px] items-center justify-center rounded-full border border-[#727272] px-10 font-extrabold transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
           <span className="absolute left-5 top-1/2 -translate-y-1/2">
@@ -131,6 +193,7 @@ const Signup = () => {
         {/* Google */}
         <button
           type="button"
+          onClick={handleGoogleSignup}
           className="relative mx-auto mt-2 flex h-12 w-full max-w-[324px] items-center justify-center rounded-full border border-[#727272] px-10 font-extrabold transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
           <span className="absolute left-5 top-1/2 -translate-y-1/2">

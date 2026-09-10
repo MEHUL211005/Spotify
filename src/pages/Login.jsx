@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { firebaseAuth } from "../firebase/firebase";
 import { useNavigate } from "react-router-dom";
-
+import { socialLogin } from "../api/auth";
 import {
   FaSpotify,
   FaMobileAlt,
@@ -8,7 +10,7 @@ import {
   FaFacebook,
   FaApple,
 } from "react-icons/fa";
-
+import { setCredentials } from "../store/authSlice";
 import { useDispatch } from "react-redux";
 import { setLoginEmail } from "../store/loginSlice";
 
@@ -20,7 +22,69 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+const handleGoogleLogin = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
 
+    const result = await signInWithPopup(
+      firebaseAuth,
+      provider
+    );
+
+    const firebaseUser = result.user;
+
+    const firebaseIdToken =
+      await firebaseUser.getIdToken();
+
+    // Send Firebase token to our backend
+    const response = await socialLogin({
+  firebaseIdToken,
+});
+
+    console.log("Backend social login response:", response);
+
+    const { user, accessToken, refreshToken } =
+      response.data;
+
+    // Existing Redux auth state
+    dispatch(
+      setCredentials({
+        user,
+        accessToken,
+        refreshToken,
+      })
+    );
+
+    // Existing localStorage auth
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem(
+      "user",
+      JSON.stringify(user)
+    );
+
+    toast.success("Google login successful!");
+
+    navigate("/");
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      toast.error("Google login popup was closed");
+      return;
+    }
+
+    if (error.code === "auth/cancelled-popup-request") {
+      return;
+    }
+
+    console.error("Google Login Error:", error);
+
+    toast.error(
+      error.response?.data?.message ||
+        error.message ||
+        "Google login failed"
+    );
+  }
+};
   const handleContinue = (e) => {
     e.preventDefault();
 
@@ -54,7 +118,6 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#121212] px-4 py-6 text-white sm:px-6">
       <div className="w-full max-w-[330px] py-3 sm:max-w-[360px]">
-
         {/* Logo */}
         <div className="mb-6 flex justify-center">
           <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-white">
@@ -94,9 +157,7 @@ const Login = () => {
 
           {/* Email Error */}
           {emailError && (
-            <p className="mt-1 text-[11px] text-red-500">
-              {emailError}
-            </p>
+            <p className="mt-1 text-[11px] text-red-500">{emailError}</p>
           )}
 
           {/* Continue */}
@@ -112,9 +173,7 @@ const Login = () => {
         <div className="my-5 flex items-center gap-4">
           <div className="h-px flex-1 bg-[#2a2a2a]" />
 
-          <span className="text-[12px] font-medium text-[#d9d9d9]">
-            or
-          </span>
+          <span className="text-[12px] font-medium text-[#d9d9d9]">or</span>
 
           <div className="h-px flex-1 bg-[#2a2a2a]" />
         </div>
@@ -122,7 +181,7 @@ const Login = () => {
         {/* Phone Login */}
         <button
           type="button"
-          onClick={() => toast("Phone login coming soon")}
+          onClick={() => navigate("/login/phone")}
           className="relative flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
           <span className="absolute left-4 top-1/2 -translate-y-1/2">
@@ -137,16 +196,14 @@ const Login = () => {
         {/* Google Login */}
         <button
           type="button"
-          onClick={() => toast("Google login coming soon")}
+          onClick={handleGoogleLogin}
           className="relative mt-2 flex h-[42px] w-full items-center justify-center rounded-full border border-[#6a6a6a] bg-transparent text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-white hover:shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
         >
           <span className="absolute left-4 top-1/2 -translate-y-1/2">
             <FaGoogle className="text-[14px] text-[#4285F4]" />
           </span>
 
-          <span className="block text-center">
-            Continue with Google
-          </span>
+          <span className="block text-center">Continue with Google</span>
         </button>
 
         {/* Facebook Login */}
@@ -159,9 +216,7 @@ const Login = () => {
             <FaFacebook className="text-[14px] text-[#1877F2]" />
           </span>
 
-          <span className="block text-center">
-            Continue with Facebook
-          </span>
+          <span className="block text-center">Continue with Facebook</span>
         </button>
 
         {/* Apple Login */}
@@ -174,9 +229,7 @@ const Login = () => {
             <FaApple className="text-[14px] text-white" />
           </span>
 
-          <span className="block text-center">
-            Continue with Apple
-          </span>
+          <span className="block text-center">Continue with Apple</span>
         </button>
 
         {/* Sign Up */}
@@ -197,7 +250,6 @@ const Login = () => {
         {/* reCAPTCHA */}
         <div className="mt-8 px-2 text-center text-[10px] leading-[1.5] text-[#b3b3b3] sm:px-0 sm:text-[11px]">
           This site is protected by reCAPTCHA and the Google
-
           <a
             href="https://policies.google.com/privacy"
             target="_blank"
@@ -206,9 +258,7 @@ const Login = () => {
           >
             Privacy Policy
           </a>
-
           and
-
           <a
             href="https://policies.google.com/terms"
             target="_blank"
@@ -217,7 +267,6 @@ const Login = () => {
           >
             Terms of Service
           </a>
-
           apply.
         </div>
       </div>

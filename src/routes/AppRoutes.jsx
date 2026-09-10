@@ -12,6 +12,7 @@ import Login from "../pages/Login";
 import LoginPassword from "../pages/LoginPassword";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import SignupPhone from "../pages/SignupPhone";
 import Mainlayout from "../layouts/Mainlayout";
 import PublicRoute from "./PublicRoute";
 
@@ -34,10 +35,12 @@ const AppRoutes = () => {
         <Route path="/signup/verify-otp" element={<VerifyOTP />} />
 
         <Route path="/login" element={<Login />} />
+        <Route path="/login/phone" element={<SignupPhone mode="login" />} />
         <Route path="/login/password" element={<LoginPassword />} />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/signup/phone" element={<SignupPhone />} />
       </Route>
     </Routes>
   );
